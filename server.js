@@ -1,4 +1,4 @@
-require('dotenv').config();
+// require('dotenv').config(); // Removed - environment variables now sourced from Azure App Service
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -6,7 +6,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Environment Configuration (from environment variables)
+// Environment Configuration (from Azure App Service environment variables)
 const {
     WIX_API_KEY,
     WIX_API_TOKEN,
@@ -27,15 +27,15 @@ const WIX_CONFIG = {
 
 // Validate environment configuration
 if (WIX_CONFIG.apiKey && WIX_CONFIG.apiToken) {
-    console.log('✅ Wix API credentials loaded');
+    console.log('✅ Wix API credentials loaded from Azure App Service');
 } else {
-    console.warn('⚠️ Wix API credentials not found. Create .env file from .env.example');
+    console.warn('⚠️ Wix API credentials not found. Please set WIX_API_KEY and WIX_API_TOKEN in Azure App Service Application Settings');
 }
 
 if (SLACK_WEBHOOK_URL) {
-    console.log('✅ Slack webhook configured');
+    console.log('✅ Slack webhook configured from Azure App Service');
 } else {
-    console.warn('⚠️ Slack webhook not configured. Contact submissions will only be stored in memory.');
+    console.warn('⚠️ Slack webhook not configured. Set SLACK_WEBHOOK_URL in Azure App Service Application Settings. Contact submissions will only be stored in memory.');
 }
 
 // Middleware
