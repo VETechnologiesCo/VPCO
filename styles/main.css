@@ -258,6 +258,87 @@ body {
     line-height: 1.7;
 }
 
+/* About Section */
+.about-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.about-tagline {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 2.5rem;
+    font-style: italic;
+}
+
+.about-description {
+    margin-bottom: 3rem;
+}
+
+.about-description p {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.value-card {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(6, 182, 212, 0.05));
+    padding: 2rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(59, 130, 246, 0.15);
+    transition: all 0.3s ease;
+}
+
+.value-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.value-card h3 {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.value-card p {
+    color: var(--text-light);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.commitment-statement {
+    background: var(--gradient-primary);
+    color: var(--white);
+    padding: 2.5rem;
+    border-radius: 1rem;
+    margin-top: 3rem;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+}
+
+.commitment-statement p {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.commitment-statement strong {
+    font-weight: 700;
+}
+
 /* Contact Form */
 .contact-form {
     max-width: 650px;
@@ -367,6 +448,27 @@ footer p {
     .services-grid {
         grid-template-columns: 1fr;
         gap: 1.5rem;
+    }
+
+    .values-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .about-tagline {
+        font-size: 1.25rem;
+    }
+
+    .about-description p {
+        font-size: 1rem;
+    }
+
+    .commitment-statement {
+        padding: 1.5rem;
+    }
+
+    .commitment-statement p {
+        font-size: 1rem;
     }
 
     .contact-form {

@@ -111,8 +111,18 @@ app.get('/api/about', (req, res) => {
         data: {
             company: 'VPCO',
             fullName: 'VE Technologies Co.',
-            tagline: 'Building the future with VE Technologies Co.',
-            description: 'We are VPCO, delivering innovative solutions and cutting-edge technology.',
+            tagline: 'Investing in the future through technology and real estate',
+            description: 'VPCO invests in the future by defining technology and real estate solutions. We keep things simple: earn trust by doing what we say, win by focusing on fundamentals and ethics, and lead by listening first, setting clear goals, and removing roadblocks so others can shine.',
+            mission: 'We are steady under pressure, transparent about tradeoffs, and comfortable owning results—good or bad. Our growth mindset is practical: small, compounding improvements, data over opinions, and roadmaps that balance today\'s execution with tomorrow\'s opportunities.',
+            values: [
+                'Earn trust through action and integrity',
+                'Focus on fundamentals and ethics',
+                'Lead by listening and empowering others',
+                'Transparent communication and accountability',
+                'Data-driven decision making',
+                'Respect for people and relationships'
+            ],
+            commitment: 'When you work with VPCO, you get a reliable partner who cares about outcomes and the people who make them possible. We stay professional—prepared, responsive, and respectful of your time—and we protect relationships by communicating clearly, keeping confidences, and sharing credit.',
             founded: 2025
         }
     });
