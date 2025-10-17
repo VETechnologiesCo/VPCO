@@ -6,12 +6,12 @@ echo "🚀 Starting VPCO in Production Mode"
 echo "======================================"
 echo ""
 
-# Check if .env exists
-if [ ! -f .env ]; then
-    echo "❌ Error: .env file not found"
-    echo "Please create .env from .env.example"
-    exit 1
-fi
+# Note: Environment variables are now sourced from Azure App Service Application Settings
+# For local development with Wix/Slack integrations, set environment variables manually:
+# export WIX_API_KEY="..."
+# export SLACK_WEBHOOK_URL="..."
+echo "ℹ️  Environment variables sourced from Azure App Service (or local exports)"
+echo ""
 
 # Check if node_modules exists
 if [ ! -d node_modules ]; then

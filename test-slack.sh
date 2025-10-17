@@ -1,5 +1,5 @@
 #!/bin/bash
-# Test Slack Integration for VPCO Contact Form
+# Test Slack Integration for VPCO Azure Deployment
 
 echo "======================================"
 echo "🧪 Testing VPCO Slack Integration"
@@ -19,17 +19,20 @@ else
     echo ""
 fi
 
+# Configuration
+AZURE_APP_URL="https://vpco-prod.azurewebsites.net"
+
 echo ""
-echo "📤 Submitting test contact form..."
+echo "📤 Submitting test contact form to Azure deployment..."
 echo ""
 
 # Submit test contact form
-RESPONSE=$(curl -s -X POST http://localhost:3000/api/contact \
+RESPONSE=$(curl -s -X POST $AZURE_APP_URL/api/contact \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Test User",
     "email": "test@vpco.example.com",
-    "message": "This is a test submission from the VPCO contact form integration test."
+    "message": "This is a test submission from the VPCO Azure deployment integration test."
   }')
 
 # Check response
