@@ -6,30 +6,36 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Wix API Configuration (from environment variables)
+// Environment Configuration (from environment variables)
+const {
+    WIX_API_KEY,
+    WIX_API_TOKEN,
+    WIX_SITE_ID,
+    WIX_ACCOUNT_ID,
+    DOMAIN_NAME,
+    SLACK_WEBHOOK_URL
+} = process.env;
+
+// Wix API Configuration
 const WIX_CONFIG = {
-    apiKey: process.env.WIX_API_KEY,
-    apiToken: process.env.WIX_API_TOKEN,
-    siteId: process.env.WIX_SITE_ID,
-    accountId: process.env.WIX_ACCOUNT_ID,
-    domainName: process.env.DOMAIN_NAME
+    apiKey: WIX_API_KEY,
+    apiToken: WIX_API_TOKEN,
+    siteId: WIX_SITE_ID,
+    accountId: WIX_ACCOUNT_ID,
+    domainName: DOMAIN_NAME
 };
 
-// Slack Webhook Configuration
-const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
-
-// Validate Wix credentials are loaded
+// Validate environment configuration
 if (WIX_CONFIG.apiKey && WIX_CONFIG.apiToken) {
     console.log('✅ Wix API credentials loaded');
 } else {
-    console.warn('⚠️  Wix API credentials not found. Create .env file from .env.example');
+    console.warn('⚠️ Wix API credentials not found. Create .env file from .env.example');
 }
 
-// Validate Slack webhook
 if (SLACK_WEBHOOK_URL) {
     console.log('✅ Slack webhook configured');
 } else {
-    console.warn('⚠️  Slack webhook not configured. Contact submissions will only be stored in memory.');
+    console.warn('⚠️ Slack webhook not configured. Contact submissions will only be stored in memory.');
 }
 
 // Middleware
@@ -136,7 +142,13 @@ let services = [
 
 // Health check
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+    res.json({ 
+        success: true, 
+        data: {
+            status: 'ok', 
+            timestamp: new Date().toISOString() 
+        }
+    });
 });
 
 // Get all services
@@ -191,7 +203,7 @@ app.post('/api/contact', async (req, res) => {
     if (slackResult.success) {
         console.log('✅ Slack notification sent');
     } else {
-        console.warn('⚠️  Slack notification failed:', slackResult.message);
+        console.warn('⚠️ Slack notification failed:', slackResult.message);
     }
 
     res.status(201).json({ 

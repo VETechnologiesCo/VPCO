@@ -5,8 +5,9 @@ describe('VPCO API and Frontend', () => {
   it('GET /api/health -> 200 with status ok', async () => {
     const res = await request(app).get('/api/health');
     expect(res.statusCode).toBe(200);
-    expect(res.body).toHaveProperty('status', 'ok');
-    expect(res.body).toHaveProperty('timestamp');
+    expect(res.body).toHaveProperty('success', true);
+    expect(res.body.data).toHaveProperty('status', 'ok');
+    expect(res.body.data).toHaveProperty('timestamp');
   });
 
   it('GET /api/services -> 200 and returns services array', async () => {
@@ -54,6 +55,13 @@ describe('VPCO API and Frontend', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty('success', true);
     expect(res.body.data).toHaveProperty('configured');
+  });
+
+  it('GET /api/contacts -> 200 with contacts array', async () => {
+    const res = await request(app).get('/api/contacts');
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty('success', true);
+    expect(Array.isArray(res.body.data)).toBe(true);
   });
 
   it('GET / -> 200 serves index.html with title', async () => {
