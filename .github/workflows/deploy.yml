@@ -26,11 +26,11 @@ jobs:
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/mainVPCO'
     steps:
       - name: Trigger Render deploy hook
-        if: ${{ secrets.RENDER_DEPLOY_HOOK_URL != '' }}
+        if: secrets.RENDER_DEPLOY_HOOK_URL != ''
         run: |
           curl -fsSL -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" -o /dev/null
       - name: Wait for deployment (optional health check)
-        if: ${{ secrets.RENDER_HEALTHCHECK_URL != '' }}
+        if: secrets.RENDER_HEALTHCHECK_URL != ''
         run: |
           echo "Waiting for deployment to become healthy..."
           for i in {1..30}; do
