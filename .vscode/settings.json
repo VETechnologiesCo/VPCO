@@ -1,4 +1,13 @@
 {
     "python-envs.defaultEnvManager": "ms-python.python:system",
-    "python-envs.pythonProjects": []
+    "python-envs.pythonProjects": [],
+    "extensions.experimental.deferredStartupFinishedActivation": true,
+    "chat.mcp.discovery.enabled": {
+        "windsurf": true,
+        "claude-desktop": true,
+        "cursor-global": true,
+        "cursor-workspace": true
+    },
+    "chat.mcp.assisted.nuget.enabled": true,
+    "github.copilot.chat.virtualTools.threshold": 0
 }
