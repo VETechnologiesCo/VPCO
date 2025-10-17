@@ -146,11 +146,15 @@ You can deploy this app as a single Node.js web service on Render and connect yo
 
 ### 4) Update DNS at your registrar (Wix)
 
+**Important**: Your domain uses Wix nameservers (ns6.wixdns.net, ns7.wixdns.net). All DNS changes must be made in Wix DNS Manager, not by changing NS records.
+
 - In Wix → Domains → Manage DNS (Advanced Settings)
 - Add records as directed by Render (values may differ; follow dashboard):
-  - CNAME: `www` → your Render domain (e.g., `vpco.onrender.com`)
-  - Apex/root (`@`): set A/ALIAS per Render’s instructions
+  - **CNAME** for `www`: Host=`www`, Value=`vpco.onrender.com` (your Render URL)
+  - **A record** for apex (`@`): Host=`@`, Value=IP from Render (e.g., `216.24.57.1`)
 - Save DNS changes and wait for propagation (usually 5–60 minutes)
+
+**See [DNS_SETUP.md](./DNS_SETUP.md) for detailed Wix DNS configuration and troubleshooting.**
 
 ### 5) Verify
 
