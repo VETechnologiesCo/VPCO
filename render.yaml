@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: vpco
+    env: node
+    plan: starter
+    autoDeploy: true
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: PORT
+        value: 3000
+      - key: WIX_API_KEY
+        sync: false
+      - key: WIX_API_TOKEN
+        sync: false
+      - key: WIX_SITE_ID
+        sync: false
+      - key: WIX_ACCOUNT_ID
+        sync: false
+      - key: DOMAIN_NAME
+        sync: false
