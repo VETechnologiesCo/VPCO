@@ -71,6 +71,15 @@ curl -X POST http://localhost:3000/api/contact \
 
 # Get company info
 curl http://localhost:3000/api/about
+## Testing
+
+Run the automated test suite (Jest + Supertest):
+
+```bash
+npm test
+```
+
+This runs fast API and HTML serving checks. CI runs the same on every push/PR.
 ```
 
 ## Environment Variables
@@ -105,6 +114,52 @@ For production, consider:
 4. Use environment variables for sensitive config
 5. Set up logging and monitoring
 6. Add HTTPS/TLS certificates
+
+## Deployment (Render + Custom Domain)
+
+You can deploy this app as a single Node.js web service on Render and connect your custom domain.
+
+### 1) Prepare repo
+
+- Ensure your code is pushed to GitHub
+- Do NOT commit `.env` (already git-ignored)
+
+### 2) Create Render service
+
+- Create an account at https://render.com
+- Click New → Web Service → “Build and deploy from a Git repo”
+- Select this repo
+- Use the following settings:
+  - Runtime: Node
+  - Build Command: `npm install`
+  - Start Command: `npm start`
+  - Environment: add your `.env` values:
+    - `PORT=3000`
+    - `WIX_API_KEY`, `WIX_API_TOKEN`, `WIX_SITE_ID`, `WIX_ACCOUNT_ID`, `DOMAIN_NAME`
+- (Optional) Commit `render.yaml` for IaC deployment
+
+### 3) Add custom domain
+
+- In Render → Service → Settings → Custom Domains → Add Domain
+- Add both apex (e.g., `yourdomain.com`) and `www.yourdomain.com`
+- Render will show the exact DNS records required
+
+### 4) Update DNS at your registrar (Wix)
+
+- In Wix → Domains → Manage DNS (Advanced Settings)
+- Add records as directed by Render (values may differ; follow dashboard):
+  - CNAME: `www` → your Render domain (e.g., `vpco.onrender.com`)
+  - Apex/root (`@`): set A/ALIAS per Render’s instructions
+- Save DNS changes and wait for propagation (usually 5–60 minutes)
+
+### 5) Verify
+
+- Visit `https://yourdomain.com/api/health`
+- Confirm the site is live and API responds
+
+Notes:
+- Keep secrets in the Render dashboard (never commit to git)
+- If using another host (Railway/Fly/Azure), replicate the same env vars and start command
 
 ## License
 
