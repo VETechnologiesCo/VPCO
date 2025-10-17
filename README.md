@@ -97,8 +97,11 @@ Edit `.env` with your actual values:
 - `WIX_SITE_ID` - Your Wix site ID
 - `WIX_ACCOUNT_ID` - Your Wix account ID
 - `DOMAIN_NAME` - Your custom domain
+- `SLACK_WEBHOOK_URL` - Slack webhook for contact form notifications (optional)
 
 **See [WIX_SETUP.md](./WIX_SETUP.md) for detailed Wix integration instructions.**
+
+**See [SLACK_SETUP.md](./SLACK_SETUP.md) for Slack notifications setup.**
 
 Example:
 ```bash

@@ -15,11 +15,21 @@ const WIX_CONFIG = {
     domainName: process.env.DOMAIN_NAME
 };
 
+// Slack Webhook Configuration
+const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
+
 // Validate Wix credentials are loaded
 if (WIX_CONFIG.apiKey && WIX_CONFIG.apiToken) {
     console.log('✅ Wix API credentials loaded');
 } else {
     console.warn('⚠️  Wix API credentials not found. Create .env file from .env.example');
+}
+
+// Validate Slack webhook
+if (SLACK_WEBHOOK_URL) {
+    console.log('✅ Slack webhook configured');
+} else {
+    console.warn('⚠️  Slack webhook not configured. Contact submissions will only be stored in memory.');
 }
 
 // Middleware
@@ -29,6 +39,75 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from root directory
 app.use(express.static(path.join(__dirname)));
+
+// Helper function to send Slack notification
+async function sendSlackNotification(contact) {
+    if (!SLACK_WEBHOOK_URL) {
+        return { success: false, message: 'Slack webhook not configured' };
+    }
+
+    try {
+        const payload = {
+            text: '🔔 New Contact Form Submission',
+            blocks: [
+                {
+                    type: 'header',
+                    text: {
+                        type: 'plain_text',
+                        text: '📬 New Contact Form Submission',
+                        emoji: true
+                    }
+                },
+                {
+                    type: 'section',
+                    fields: [
+                        {
+                            type: 'mrkdwn',
+                            text: `*Name:*\n${contact.name}`
+                        },
+                        {
+                            type: 'mrkdwn',
+                            text: `*Email:*\n${contact.email}`
+                        }
+                    ]
+                },
+                {
+                    type: 'section',
+                    text: {
+                        type: 'mrkdwn',
+                        text: `*Message:*\n${contact.message}`
+                    }
+                },
+                {
+                    type: 'context',
+                    elements: [
+                        {
+                            type: 'mrkdwn',
+                            text: `Submitted: ${new Date(contact.timestamp).toLocaleString()} | ID: ${contact.id}`
+                        }
+                    ]
+                }
+            ]
+        };
+
+        const response = await fetch(SLACK_WEBHOOK_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Slack API error: ${response.status}`);
+        }
+
+        return { success: true, message: 'Slack notification sent' };
+    } catch (error) {
+        console.error('Error sending Slack notification:', error);
+        return { success: false, message: error.message };
+    }
+}
 
 // In-memory data store (replace with database in production)
 let contacts = [];
@@ -75,7 +154,7 @@ app.get('/api/services/:id', (req, res) => {
 });
 
 // Submit contact form
-app.post('/api/contact', (req, res) => {
+app.post('/api/contact', async (req, res) => {
     const { name, email, message } = req.body;
 
     // Validation
@@ -106,6 +185,14 @@ app.post('/api/contact', (req, res) => {
     contacts.push(contact);
 
     console.log('New contact submission:', contact);
+
+    // Send Slack notification (non-blocking)
+    const slackResult = await sendSlackNotification(contact);
+    if (slackResult.success) {
+        console.log('✅ Slack notification sent');
+    } else {
+        console.warn('⚠️  Slack notification failed:', slackResult.message);
+    }
 
     res.status(201).json({ 
         success: true, 
