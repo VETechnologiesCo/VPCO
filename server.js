@@ -181,11 +181,13 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`🚀 VPCO API Server running on http://localhost:${PORT}`);
-    console.log(`📡 API endpoints available at http://localhost:${PORT}/api`);
-    console.log(`🌐 Frontend available at http://localhost:${PORT}`);
-});
+// Start server only when run directly (not when imported by tests)
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`🚀 VPCO API Server running on http://localhost:${PORT}`);
+        console.log(`📡 API endpoints available at http://localhost:${PORT}/api`);
+        console.log(`🌐 Frontend available at http://localhost:${PORT}`);
+    });
+}
 
 module.exports = app;
