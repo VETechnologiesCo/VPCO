@@ -1,43 +1,75 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+AZURE_CLIENT_ID       # Service Principal Client ID
+AZURE_TENANT_ID       # Azure Tenant ID  
+AZURE_SUBSCRIPTION_ID # Azure Subscription ID# Workflow for deploying VPCO to Azure App Service
+name: Deploy to Azure App Service
 
 on:
-  # Runs on pushes targeting the default branch
+  # Runs on pushes targeting the main branch
   push:
     branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# Sets permissions for Azure deployment
 permissions:
   contents: read
-  pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Allow only one concurrent deployment
 concurrency:
-  group: "pages"
+  group: "azure-deployment"
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  # Build and deploy job
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          # Upload entire repository
-          path: '.'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build application (if needed)
+        run: |
+          # Add build steps here if your app requires building
+          echo "Build step - customize as needed"
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to Azure App Service
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'vpco-prod'
+          slot-name: 'production'
+          resource-group-name: 'vpco-prod-rg'
+          package: .
+
+      - name: Run deployment tests
+        run: |
+          # Wait for app to be ready
+          sleep 30
+          # Run basic health check
+          curl -f https://vpco-prod.azurewebsites.net/api/health || exit 1
+
+env:
+  AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}       # Service Principal Client ID
+  AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}       # Azure Tenant ID  
+  AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }} # Azure Subscription ID
