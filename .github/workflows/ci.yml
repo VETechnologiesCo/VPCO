@@ -5,6 +5,7 @@ on:
     branches: [ main, mainVPCO ]
   pull_request:
     branches: [ main, mainVPCO ]
+  workflow_dispatch:
 
 jobs:
   test:
