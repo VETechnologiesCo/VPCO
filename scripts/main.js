@@ -39,8 +39,17 @@ async function loadServices() {
         
         if (result.success && result.data) {
             const servicesGrid = document.querySelector('.services-grid');
+            
+            // Category icons/badges
+            const categoryBadges = {
+                'technology': '💻',
+                'real-estate': '🏢',
+                'advisory': '🤝'
+            };
+            
             servicesGrid.innerHTML = result.data.map(service => `
-                <div class="service-card" data-service-id="${service.id}">
+                <div class="service-card" data-service-id="${service.id}" data-category="${service.category || ''}">
+                    <div class="service-category">${categoryBadges[service.category] || '⭐'}</div>
                     <h3>${service.name}</h3>
                     <p>${service.description}</p>
                 </div>

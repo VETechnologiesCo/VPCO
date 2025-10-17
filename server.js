@@ -33,9 +33,24 @@ app.use(express.static(path.join(__dirname)));
 // In-memory data store (replace with database in production)
 let contacts = [];
 let services = [
-    { id: 1, name: 'Consulting', description: 'Expert guidance for your technology needs.' },
-    { id: 2, name: 'Development', description: 'Custom software solutions tailored to you.' },
-    { id: 3, name: 'Support', description: 'Ongoing maintenance and technical assistance.' }
+    { 
+        id: 1, 
+        name: 'Technology Solutions', 
+        description: 'Strategic technology consulting and implementation. We help you navigate digital transformation with practical, data-driven roadmaps that balance innovation with reliable execution.',
+        category: 'technology'
+    },
+    { 
+        id: 2, 
+        name: 'Real Estate Investment', 
+        description: 'Thoughtful real estate investment and development. We focus on fundamentals—location, market data, and long-term value—to build sustainable portfolios that compound over time.',
+        category: 'real-estate'
+    },
+    { 
+        id: 3, 
+        name: 'Strategic Partnership', 
+        description: 'Collaborative partnership and advisory services. We listen first, set clear goals, and remove roadblocks so you can focus on what matters most—growing your business and serving your customers.',
+        category: 'advisory'
+    }
 ];
 
 // API Routes
