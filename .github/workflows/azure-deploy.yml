@@ -1,3 +1,0 @@
-# This workflow file has been moved to .github/workflows/azure/azure-deploy.yml
-# This duplicate file should be deleted from the repository
-# The active Azure deployment workflow is now located in the azure/ subdirectory
