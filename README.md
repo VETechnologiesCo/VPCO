@@ -156,6 +156,24 @@ You can deploy this app as a single Node.js web service on Render and connect yo
 
 **See [DNS_SETUP.md](./DNS_SETUP.md) for detailed Wix DNS configuration and troubleshooting.**
 
+## CI/CD (GitHub Actions → Render)
+
+This repo includes two workflows:
+- `.github/workflows/ci.yml` — runs tests on pushes/PRs
+- `.github/workflows/deploy.yml` — runs tests then triggers a Render deploy hook on pushes to `main` or `mainVPCO`
+
+### Configure Render Deploy Hook
+1. In Render → Service → Settings → Deploy Hooks → Create Hook
+2. Copy the hook URL
+3. Add to GitHub repo secrets:
+  - `RENDER_DEPLOY_HOOK_URL` — the hook URL from Render
+  - `RENDER_HEALTHCHECK_URL` — your public health URL (e.g., `https://your-domain.com/api/health`) for optional post-deploy checks
+
+On every push to `main` or `mainVPCO`, Actions will:
+1. Install deps and run tests
+2. Trigger a Render deploy via the hook
+3. Optionally poll the health check until status ok
+
 ### 5) Verify
 
 - Visit `https://yourdomain.com/api/health`
