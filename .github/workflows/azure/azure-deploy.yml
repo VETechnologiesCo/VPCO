@@ -1,0 +1,83 @@
+# Workflow for deploying VPCO to Azure App Service
+name: Deploy to Azure App Service
+
+on:
+  # Runs on pushes targeting the main branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - development
+
+# Sets permissions for Azure deployment
+permissions:
+  contents: read
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "azure-deployment"
+  cancel-in-progress: false
+
+jobs:
+  # Build and deploy job
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build application (if needed)
+        run: |
+          # Add build steps here if your app requires building
+          echo "Build step - customize as needed"
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to Azure App Service
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'vpco-prod'
+          slot-name: ${{ github.event.inputs.environment || 'production' }}
+          resource-group-name: 'vpco-prod-rg'
+          package: .
+
+      - name: Run deployment tests
+        run: |
+          # Wait for app to be ready
+          sleep 30
+          # Set URL based on environment
+          if [ "${{ github.event.inputs.environment }}" = "development" ]; then
+            URL="https://vpco-prod-dev.azurewebsites.net"
+          else
+            URL="https://vpco-prod.azurewebsites.net"
+          fi
+          # Run basic health check
+          curl -f $URL/api/health || exit 1
