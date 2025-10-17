@@ -6,26 +6,16 @@ echo "🧪 Testing VPCO Slack Integration"
 echo "======================================"
 echo ""
 
-# Check if .env file exists
-if [ ! -f .env ]; then
-    echo "❌ Error: .env file not found"
-    echo "Please create .env file from .env.example"
-    exit 1
-fi
-
-# Check if webhook URL is configured
-if grep -q "^SLACK_WEBHOOK_URL=https://hooks.slack.com" .env; then
-    echo "✅ Slack webhook URL found in .env"
+# Check if webhook URL is configured in environment
+if [ -n "$SLACK_WEBHOOK_URL" ] && [[ $SLACK_WEBHOOK_URL == https://hooks.slack.com* ]]; then
+    echo "✅ Slack webhook URL found in environment variables"
 else
     echo "⚠️  Warning: SLACK_WEBHOOK_URL not configured or using placeholder"
     echo ""
-    echo "To complete setup:"
-    echo "1. Visit: https://api.slack.com/apps/A09M2LDH6KC/incoming-webhooks"
-    echo "2. Turn ON 'Activate Incoming Webhooks'"
-    echo "3. Click 'Add New Webhook to Workspace'"
-    echo "4. Select your channel"
-    echo "5. Copy the webhook URL and add to .env:"
-    echo "   SLACK_WEBHOOK_URL=https://hooks.slack.com/services/..."
+    echo "For local testing, set the environment variable:"
+    echo "  export SLACK_WEBHOOK_URL=https://hooks.slack.com/services/..."
+    echo ""
+    echo "For Azure deployment, ensure SLACK_WEBHOOK_URL is set in App Service Application Settings"
     echo ""
 fi
 
