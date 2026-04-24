@@ -18,9 +18,25 @@ describe('VPCO API and Frontend', () => {
     expect(res.body.data.length).toBeGreaterThan(0);
   });
 
+  it('GET /api/services/:id -> 200 for existing service', async () => {
+    const res = await request(app).get('/api/services/1');
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty('success', true);
+    expect(res.body.data).toHaveProperty('id', 1);
+  });
+
   it('GET /api/services/:id -> 404 for missing service', async () => {
     const res = await request(app).get('/api/services/99999');
     expect(res.statusCode).toBe(404);
+    expect(res.body).toHaveProperty('success', false);
+  });
+
+  it('POST /api/contact -> 400 when required fields are missing', async () => {
+    const res = await request(app)
+      .post('/api/contact')
+      .send({ name: 'Tester' })
+      .set('Content-Type', 'application/json');
+    expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty('success', false);
   });
 
@@ -62,6 +78,12 @@ describe('VPCO API and Frontend', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty('success', true);
     expect(Array.isArray(res.body.data)).toBe(true);
+  });
+
+  it('GET /api/wix/example -> 503 when Wix credentials not configured', async () => {
+    const res = await request(app).get('/api/wix/example');
+    expect(res.statusCode).toBe(503);
+    expect(res.body).toHaveProperty('success', false);
   });
 
   it('GET / -> 200 serves index.html with title', async () => {

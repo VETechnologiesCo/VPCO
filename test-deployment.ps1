@@ -78,7 +78,7 @@ Write-Host -NoNewline "Checking Wix API configuration... "
 try {
     $wixResponse = Invoke-WebRequest -Uri "$AzureAppUrl/api/wix/status" -Method Get
     $wixContent = $wixResponse.Content | ConvertFrom-Json
-    if ($wixContent.configured -eq $true) {
+    if ($wixContent.data.configured -eq $true) {
         Write-Host "✓ Wix API configured" -ForegroundColor Green
         $Passed++
     } else {
