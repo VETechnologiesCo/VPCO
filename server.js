@@ -22,7 +22,7 @@ const WIX_CONFIG = {
     apiToken: WIX_API_TOKEN,
     siteId: WIX_SITE_ID,
     accountId: WIX_ACCOUNT_ID,
-    domainName: DOMAIN_NAME
+    domainName: DOMAIN_NAME || 'vigliottaproperties.com'
 };
 
 // Validate environment configuration
@@ -225,6 +225,7 @@ app.get('/api/about', (req, res) => {
         data: {
             company: 'VPCO',
             fullName: 'VE Technologies Co.',
+            website: 'https://vigliottaproperties.com',
             tagline: 'Investing in the future through technology and real estate',
             description: 'VPCO invests in the future by defining technology and real estate solutions. We keep things simple: earn trust by doing what we say, win by focusing on fundamentals and ethics, and lead by listening first, setting clear goals, and removing roadblocks so others can shine.',
             mission: 'We are steady under pressure, transparent about tradeoffs, and comfortable owning results—good or bad. Our growth mindset is practical: small, compounding improvements, data over opinions, and roadmaps that balance today\'s execution with tomorrow\'s opportunities.',
